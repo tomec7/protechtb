@@ -4,6 +4,11 @@
   const mobileBtn = document.getElementById('mobileMenuBtn');
   const nav = document.getElementById('mainNav');
 
+  // light "wow" intro trigger
+  requestAnimationFrame(() => {
+    setTimeout(() => document.body.classList.add('lab-ready'), 80);
+  });
+
   // Google Analytics (GA4)
   const GA_ID = 'G-DX988YYFYP';
   const host = location.hostname;
