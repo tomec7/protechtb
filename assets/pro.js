@@ -52,10 +52,10 @@
     if (href === path) a.classList.add('active');
   });
 
-  const targets = document.querySelectorAll('section, .card, .project, .faq details, .visual-grid img');
+  const targets = document.querySelectorAll('section, .card, .project, .faq details, .visual-grid img, .offer-tile, .bento, .steps-modern article, .tile');
   targets.forEach((el, i) => {
     el.classList.add('reveal');
-    el.style.transitionDelay = `${Math.min(i * 18, 200)}ms`;
+    el.style.transitionDelay = `${Math.min(i * 10, 90)}ms`;
   });
 
   const io = new IntersectionObserver((entries) => {
@@ -65,9 +65,41 @@
         io.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+  }, { threshold: 0.06, rootMargin: '0px 0px -4% 0px' });
 
   targets.forEach(el => io.observe(el));
+
+  // top scroll progress line
+  const progress = document.createElement('div');
+  progress.className = 'scroll-progress';
+  document.body.appendChild(progress);
+  const updateProgress = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    const p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    progress.style.width = `${Math.max(0, Math.min(100, p))}%`;
+  };
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // sticky mini-CTA
+  const sticky = document.createElement('a');
+  sticky.className = 'sticky-cta';
+  sticky.href = 'kontakt.html';
+  sticky.textContent = document.documentElement.lang === 'en' ? 'Write to us' : 'Napíšte nám';
+  sticky.setAttribute('aria-label', sticky.textContent);
+  document.body.appendChild(sticky);
+
+  // hover spotlight for offer cards
+  document.querySelectorAll('.offer-tile').forEach((tile) => {
+    tile.addEventListener('mousemove', (e) => {
+      const r = tile.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width) * 100;
+      const y = ((e.clientY - r.top) / r.height) * 100;
+      tile.style.setProperty('--mx', `${x}%`);
+      tile.style.setProperty('--my', `${y}%`);
+    });
+  });
 
   // lightweight custom events for GA
   const contactForm = document.querySelector('.contact-form');
